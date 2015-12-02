@@ -14,6 +14,8 @@ import com.xeiam.xchange.bitfinex.v1.dto.account.BitfinexBalancesRequest;
 import com.xeiam.xchange.bitfinex.v1.dto.account.BitfinexBalancesResponse;
 import com.xeiam.xchange.bitfinex.v1.dto.account.BitfinexMarginInfosRequest;
 import com.xeiam.xchange.bitfinex.v1.dto.account.BitfinexMarginInfosResponse;
+import com.xeiam.xchange.bitfinex.v1.dto.account.BitfinexWithdrawalRequest;
+import com.xeiam.xchange.bitfinex.v1.dto.account.BitfinexWithdrawalResponse;
 import com.xeiam.xchange.bitfinex.v1.dto.trade.BitfinexActiveCreditsRequest;
 import com.xeiam.xchange.bitfinex.v1.dto.trade.BitfinexActivePositionsResponse;
 import com.xeiam.xchange.bitfinex.v1.dto.trade.BitfinexCancelOfferRequest;
@@ -105,5 +107,10 @@ public interface BitfinexAuthenticated extends Bitfinex {
   @Path("margin_infos")
   BitfinexMarginInfosResponse[] marginInfos(@HeaderParam("X-BFX-APIKEY") String apiKey, @HeaderParam("X-BFX-PAYLOAD") ParamsDigest payload,
       @HeaderParam("X-BFX-SIGNATURE") ParamsDigest signature, BitfinexMarginInfosRequest marginInfosRequest) throws IOException, BitfinexException;
+  
+  @POST
+  @Path("withdraw")
+  BitfinexWithdrawalResponse[] withdraw(@HeaderParam("X-BFX-APIKEY") String apiKey, @HeaderParam("X-BFX-PAYLOAD") ParamsDigest payload,
+      @HeaderParam("X-BFX-SIGNATURE") ParamsDigest signature, BitfinexWithdrawalRequest withdrawalRequest) throws IOException, BitfinexException;
 
 }

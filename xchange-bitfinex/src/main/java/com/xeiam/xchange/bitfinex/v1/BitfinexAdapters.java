@@ -60,7 +60,7 @@ public final class BitfinexAdapters {
 
   public static String adaptCurrencyPair(CurrencyPair pair) {
 
-    return (pair.baseSymbol + pair.counterSymbol).toLowerCase();
+    return (pair.base.toString() + pair.counter.toString()).toLowerCase();
   }
 
   public static OrderBook adaptOrderBook(BitfinexDepth btceDepth, CurrencyPair currencyPair) {

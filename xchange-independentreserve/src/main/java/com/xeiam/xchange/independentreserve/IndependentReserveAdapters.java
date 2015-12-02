@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order;
 import com.xeiam.xchange.dto.account.AccountInfo;
@@ -54,7 +55,11 @@ public class IndependentReserveAdapters {
     List<Wallet> wallets = new ArrayList<Wallet>();
 
     for (IndependentReserveAccount balanceAccount : independentReserveBalance.getIndependentReserveAccounts()) {
-      wallets.add(new Wallet(balanceAccount.getCurrencyCode(), balanceAccount.getTotalBalance()));
+      String currency = balanceAccount.getCurrencyCode().toUpperCase();
+      wallets.add(new Wallet(currency, balanceAccount.getTotalBalance()));
+      if ("XBT".equals(currency)) {
+        wallets.add(new Wallet("BTC", balanceAccount.getTotalBalance()));
+      }
     }
     return new AccountInfo(userName, wallets);
   }
@@ -101,7 +106,7 @@ public class IndependentReserveAdapters {
       }
 
       UserTrade ut = new UserTrade(type, trade.getVolumeTraded(), currencyPair, trade.getPrice(), trade.getTradeTimestampUtc(), trade.getTradeGuid(),
-          trade.getOrderGuid(), null, null);
+          trade.getOrderGuid(), null, (Currency)null);
 
       userTrades.add(ut);
     }

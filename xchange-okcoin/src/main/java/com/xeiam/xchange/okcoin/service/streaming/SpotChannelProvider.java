@@ -5,7 +5,7 @@ import com.xeiam.xchange.currency.CurrencyPair;
 class SpotChannelProvider implements ChannelProvider {
 
   private static String pairToString(CurrencyPair currencyPair) {
-    return currencyPair.baseSymbol.toLowerCase() + currencyPair.counterSymbol.toLowerCase();
+    return currencyPair.base.toString().toLowerCase() + currencyPair.counter.toString().toLowerCase();
   }
 
   @Override

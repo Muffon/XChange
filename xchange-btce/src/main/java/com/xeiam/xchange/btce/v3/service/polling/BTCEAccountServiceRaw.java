@@ -8,6 +8,7 @@ import com.xeiam.xchange.btce.v3.dto.account.BTCEAccountInfo;
 import com.xeiam.xchange.btce.v3.dto.account.BTCEAccountInfoReturn;
 import com.xeiam.xchange.btce.v3.dto.account.BTCEWithDrawInfoReturn;
 import com.xeiam.xchange.btce.v3.dto.account.BTCEWithdrawInfo;
+import com.xeiam.xchange.currency.Currency;
 import java.math.BigDecimal;
 
 /**
@@ -52,9 +53,13 @@ public class BTCEAccountServiceRaw extends BTCEBasePollingService {
      * @param address Withdrawall address 
      * @return Transactoin ID
      */
-    public String withdraw(String currency, BigDecimal amount, String address)
+    public String withdraw(Currency currency, BigDecimal amount, String address)
   {
+<<<<<<< HEAD
       BTCEWithDrawInfoReturn info = btce.Withdraw(apiKey, signatureCreator, currency, amount, address);
+=======
+      BTCEWithDrawInfoReturn info = btce.WithdrawCoin(apiKey, signatureCreator,exchange.getNonceFactory(), currency.toString(), amount, address);
+>>>>>>> 5399dbf6c48735a4e15e653f076829d44029a076
       
       return String.valueOf(info.getReturnValue().gettId());
   }

@@ -1,6 +1,8 @@
 package com.xeiam.xchange.itbit.v1;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import com.xeiam.xchange.currency.Currency;
 import com.xeiam.xchange.currency.CurrencyPair;
 import com.xeiam.xchange.dto.Order.OrderType;
 import com.xeiam.xchange.dto.account.AccountInfo;
@@ -32,9 +35,21 @@ public final class ItBitAdapters {
 
   private static final OpenOrders noOpenOrders = new OpenOrders(Collections.<LimitOrder> emptyList());
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+  private static final DecimalFormat cryptoFormat;
+  private static final DecimalFormat fiatFormat;
 
   static {
     dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+    cryptoFormat = new DecimalFormat();
+    cryptoFormat.setMaximumFractionDigits(4);
+    cryptoFormat.setGroupingUsed(false);
+    cryptoFormat.setRoundingMode(RoundingMode.HALF_UP);
+
+    fiatFormat = new DecimalFormat();
+    fiatFormat.setMaximumFractionDigits(2);
+    fiatFormat.setGroupingUsed(false);
+    fiatFormat.setRoundingMode(RoundingMode.HALF_UP);
   }
 
   /**
@@ -158,7 +173,7 @@ public final class ItBitAdapters {
       Date timestamp = parseDate(itBitOrder.getCreatedTime());
 
       trades.add(new UserTrade(orderType, itBitOrder.getAmount(), currencyPair, itBitOrder.getPrice(), timestamp, itBitOrder.getId(),
-          itBitOrder.getId(), null, null));
+          itBitOrder.getId(), null, (Currency)null));
     }
 
     return new UserTrades(trades, TradeSortType.SortByTimestamp);
@@ -176,5 +191,13 @@ public final class ItBitAdapters {
 
     return new Ticker.Builder().currencyPair(currencyPair).last(last).bid(bid).ask(ask).high(high).low(low).volume(volume).timestamp(timestamp)
         .build();
+  }
+
+  public static String formatFiatAmount(BigDecimal amount) {
+    return fiatFormat.format(amount);
+  }
+
+  public static String formatCryptoAmount(BigDecimal amount) {
+    return cryptoFormat.format(amount);
   }
 }

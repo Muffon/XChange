@@ -24,18 +24,18 @@ public class IndependentReserveMarketDataService extends IndependentReserveMarke
   @Override
   public Ticker getTicker(CurrencyPair currencyPair, Object... args)
       throws ExchangeException, NotAvailableFromExchangeException, NotYetImplementedForExchangeException, IOException {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public OrderBook getOrderBook(CurrencyPair currencyPair, Object... args)
       throws ExchangeException, NotAvailableFromExchangeException, NotYetImplementedForExchangeException, IOException {
-    return IndependentReserveAdapters.adaptOrderBook(getIndependentReserveOrderBook(currencyPair.baseSymbol, currencyPair.counterSymbol));
+    return IndependentReserveAdapters.adaptOrderBook(getIndependentReserveOrderBook(currencyPair.base.getCurrencyCode(), currencyPair.counter.getCurrencyCode()));
   }
 
   @Override
   public Trades getTrades(CurrencyPair currencyPair, Object... args)
       throws ExchangeException, NotAvailableFromExchangeException, NotYetImplementedForExchangeException, IOException {
-    return null;
+    throw new UnsupportedOperationException();
   }
 }
