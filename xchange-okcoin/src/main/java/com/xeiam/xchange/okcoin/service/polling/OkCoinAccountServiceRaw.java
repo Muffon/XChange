@@ -32,5 +32,16 @@ public class OkCoinAccountServiceRaw extends OKCoinBaseTradePollingService {
 
     return returnOrThrow(futuresUserInfoCross);
   }
+<<<<<<< HEAD
+=======
+    
+  public OKCoinWithdraw withdraw(String assetPairs, Currency assets, String key, BigDecimal amount) throws IOException {
+    OKCoinWithdraw withdrawResult = okCoin.withdraw(exchange.getExchangeSpecification().getApiKey(),
+            assets.toString(), signatureCreator, "0.0001", tradepwd, key, amount.toString());
+        
+            
+    return  returnOrThrow(withdrawResult);
+  }
+>>>>>>> parent of 5399dbf... - repair okcoin withdraw
 
 }

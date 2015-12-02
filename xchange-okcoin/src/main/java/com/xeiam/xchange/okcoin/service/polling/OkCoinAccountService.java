@@ -28,9 +28,15 @@ public class OkCoinAccountService extends OkCoinAccountServiceRaw implements Pol
   }
 
   @Override
+<<<<<<< HEAD
   public String withdrawFunds(String currency, BigDecimal amount, String address) throws IOException {
 
     throw new NotAvailableFromExchangeException();
+=======
+  public String withdrawFunds(Currency currency, BigDecimal amount, String address) throws IOException {      
+      withdraw(null, currency, address, amount);      
+      return "";
+>>>>>>> parent of 5399dbf... - repair okcoin withdraw
   }
 
   @Override
