@@ -15,7 +15,7 @@ public class BTCEWithdrawInfo {
     private final int tId;
 
    
-    private final BigDecimal amountSent;
+    private final int amountSent;
 
   /**
    * Constructor
@@ -28,14 +28,14 @@ public class BTCEWithdrawInfo {
       @JsonProperty("funds") Map<String, BigDecimal> funds) { 
     this.funds = funds;
     this.tId = tId;
-    this.amountSent = amountSent;
+    this.amountSent = tId;
   }
 
    public int gettId() {
         return tId;
     }
 
-    public BigDecimal getAmountSent() {
+    public int getAmountSent() {
         return amountSent;
     }
 
