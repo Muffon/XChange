@@ -1,8 +1,22 @@
 package com.xeiam.xchange.cryptsy.dto;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xeiam.xchange.cryptsy.CryptsyAdapters;
+import com.xeiam.xchange.cryptsy.CryptsyUtils;
+import com.xeiam.xchange.cryptsy.dto.account.CryptsyAccountInfoReturn;
+import com.xeiam.xchange.cryptsy.dto.marketdata.*;
+import com.xeiam.xchange.cryptsy.dto.trade.CryptsyOpenOrdersReturn;
+import com.xeiam.xchange.cryptsy.dto.trade.CryptsyTradeHistoryReturn;
+import com.xeiam.xchange.currency.Currency;
+import com.xeiam.xchange.currency.CurrencyPair;
+import com.xeiam.xchange.dto.Order.OrderType;
+import com.xeiam.xchange.dto.account.AccountInfo;
+import com.xeiam.xchange.dto.marketdata.OrderBook;
+import com.xeiam.xchange.dto.marketdata.Ticker;
+import com.xeiam.xchange.dto.marketdata.Trade;
+import com.xeiam.xchange.dto.marketdata.Trades;
+import com.xeiam.xchange.dto.trade.*;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,34 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.xeiam.xchange.cryptsy.CryptsyAdapters;
-import com.xeiam.xchange.cryptsy.CryptsyUtils;
-import com.xeiam.xchange.cryptsy.dto.account.CryptsyAccountInfoReturn;
-import com.xeiam.xchange.cryptsy.dto.marketdata.CryptsyGetMarketsReturn;
-import com.xeiam.xchange.cryptsy.dto.marketdata.CryptsyMarketTradesReturn;
-import com.xeiam.xchange.cryptsy.dto.marketdata.CryptsyOrderBookReturn;
-import com.xeiam.xchange.cryptsy.dto.marketdata.CryptsyPublicMarketData;
-import com.xeiam.xchange.cryptsy.dto.marketdata.CryptsyPublicMarketDataReturn;
-import com.xeiam.xchange.cryptsy.dto.marketdata.CryptsyPublicOrderbook;
-import com.xeiam.xchange.cryptsy.dto.marketdata.CryptsyPublicOrderbookReturn;
-import com.xeiam.xchange.cryptsy.dto.trade.CryptsyOpenOrdersReturn;
-import com.xeiam.xchange.cryptsy.dto.trade.CryptsyTradeHistoryReturn;
-import com.xeiam.xchange.currency.Currencies;
-import com.xeiam.xchange.currency.CurrencyPair;
-import com.xeiam.xchange.dto.Order.OrderType;
-import com.xeiam.xchange.dto.account.AccountInfo;
-import com.xeiam.xchange.dto.marketdata.OrderBook;
-import com.xeiam.xchange.dto.marketdata.Ticker;
-import com.xeiam.xchange.dto.marketdata.Trade;
-import com.xeiam.xchange.dto.marketdata.Trades;
-import com.xeiam.xchange.dto.trade.LimitOrder;
-import com.xeiam.xchange.dto.trade.OpenOrders;
-import com.xeiam.xchange.dto.trade.UserTrade;
-import com.xeiam.xchange.dto.trade.UserTrades;
-import com.xeiam.xchange.dto.trade.Wallet;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class CryptsyAdapterTest {
 
@@ -242,16 +231,22 @@ public class CryptsyAdapterTest {
     AccountInfo adaptedAccountInfo = CryptsyAdapters.adaptAccountInfo(accountInfo);
 
     List<Wallet> wallets = adaptedAccountInfo.getWallets();
-    assertEquals(wallets.size(), 150);
+    assertEquals(wallets.size(), 300);
     for (Wallet wallet : wallets) {
       if (wallet.getCurrency().equals("BTC")) {
-        assertEquals(wallet.getBalance(), new BigDecimal("0.01527794"));
+        assertEquals(wallet.getBalance(), new BigDecimal("0.05567153"));
+        assertEquals(wallet.getAvailable(), new BigDecimal("0.05466078"));
+        assertEquals(wallet.getFrozen(), new BigDecimal("0.00101075"));
       }
-      if (wallet.getCurrency().equals("ZET")) {
-        assertEquals(wallet.getBalance(), new BigDecimal("1.35094992"));
+      if (wallet.getCurrency().equals("ZRC")) {
+        assertEquals(wallet.getBalance(), new BigDecimal("206.64328423"));
+        assertEquals(wallet.getAvailable(), new BigDecimal("204.94509877"));
+        assertEquals(wallet.getFrozen(), new BigDecimal("1.69818546"));
       }
       if (wallet.getCurrency().equals("XPM")) {
-        assertEquals(wallet.getBalance(), new BigDecimal("0.00000057"));
+        assertEquals(wallet.getBalance(), new BigDecimal("17.46835803"));
+        assertEquals(wallet.getAvailable(), new BigDecimal("17.46835803"));
+        assertEquals(wallet.getFrozen(), new BigDecimal("0"));
       }
     }
   }
@@ -274,16 +269,16 @@ public class CryptsyAdapterTest {
     assertEquals(order.getId(), "90039904");
     assertEquals(order.getLimitPrice(), new BigDecimal("0.00000001"));
     assertEquals(order.getTradableAmount(), new BigDecimal("50000.10000000"));
-    assertEquals(order.getCurrencyPair().baseSymbol, "WDC");
-    assertEquals(order.getCurrencyPair().counterSymbol, "BTC");
+    assertEquals(order.getCurrencyPair().base.getCurrencyCode(), "WDC");
+    assertEquals(order.getCurrencyPair().counter.getCurrencyCode(), "BTC");
     assertEquals(order.getType(), OrderType.BID);
 
     LimitOrder order2 = adaptedOpenOrders.getOpenOrders().get(8);
     assertEquals(order2.getId(), "90041288");
     assertEquals(order2.getLimitPrice(), new BigDecimal("0.00000009"));
     assertEquals(order2.getTradableAmount(), new BigDecimal("50001.00000000"));
-    assertEquals(order2.getCurrencyPair().baseSymbol, "LTC");
-    assertEquals(order2.getCurrencyPair().counterSymbol, "BTC");
+    assertEquals(order2.getCurrencyPair().base.getCurrencyCode(), "LTC");
+    assertEquals(order2.getCurrencyPair().counter.getCurrencyCode(), "BTC");
     assertEquals(order2.getType(), OrderType.BID);
   }
 
@@ -307,7 +302,7 @@ public class CryptsyAdapterTest {
     assertEquals(trade.getTradableAmount(), new BigDecimal("0.15949550"));
     assertEquals(trade.getPrice(), new BigDecimal("0.03128615"));
     assertEquals(trade.getFeeAmount(), new BigDecimal("0.000009980"));
-    assertEquals(trade.getFeeCurrency(), Currencies.BTC);
+    assertEquals(trade.getFeeCurrency(), Currency.BTC);
   }
 
   @Test

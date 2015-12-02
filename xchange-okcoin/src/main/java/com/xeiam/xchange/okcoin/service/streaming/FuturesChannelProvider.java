@@ -11,7 +11,7 @@ class FuturesChannelProvider implements ChannelProvider {
   }
 
   private static String pairToString(CurrencyPair currencyPair) {
-    return currencyPair.baseSymbol.toLowerCase() + currencyPair.counterSymbol.toLowerCase();
+    return currencyPair.base.toString().toLowerCase() + currencyPair.counter.toString().toLowerCase();
   }
 
   @Override

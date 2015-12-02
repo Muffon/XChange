@@ -23,6 +23,7 @@ import com.xeiam.xchange.service.polling.trade.PollingTradeService;
 import com.xeiam.xchange.service.polling.trade.params.DefaultTradeHistoryParamPaging;
 import com.xeiam.xchange.service.polling.trade.params.TradeHistoryParamPaging;
 import com.xeiam.xchange.service.polling.trade.params.TradeHistoryParams;
+import com.xeiam.xchange.utils.Assert;
 
 /**
  * @author Matija Mazi
@@ -64,6 +65,8 @@ public class BitstampTradeService extends BitstampTradeServiceRaw implements Pol
   @Override
   public String placeLimitOrder(LimitOrder limitOrder) throws IOException, BitstampException {
 
+    Assert.isTrue(limitOrder.getCurrencyPair().equals(CurrencyPair.BTC_USD), "Currency Pair must be USD/BTC!!!");
+
     BitstampOrder bitstampOrder;
     if (limitOrder.getType() == BID) {
       bitstampOrder = buyBitStampOrder(limitOrder.getTradableAmount(), limitOrder.getLimitPrice());
@@ -81,22 +84,6 @@ public class BitstampTradeService extends BitstampTradeServiceRaw implements Pol
   public boolean cancelOrder(String orderId) throws IOException, BitstampException {
 
     return cancelBitstampOrder(Integer.parseInt(orderId));
-  }
-
-  @Override
-  public UserTrades getTradeHistory(Object... args) throws IOException, BitstampException {
-
-    Long numberOfTransactions = 1000L;
-    if (args.length > 0) {
-      Object arg0 = args[0];
-      if (!(arg0 instanceof Number)) {
-        throw new ExchangeException("Argument must be a Number!");
-      } else {
-        numberOfTransactions = ((Number) args[0]).longValue();
-      }
-    }
-
-    return BitstampAdapters.adaptTradeHistory(getBitstampUserTransactions(numberOfTransactions));
   }
 
   /**

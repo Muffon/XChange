@@ -11,7 +11,7 @@ import com.xeiam.xchange.dto.trade.LimitOrder;
 import com.xeiam.xchange.dto.trade.MarketOrder;
 import com.xeiam.xchange.dto.trade.OpenOrders;
 import com.xeiam.xchange.dto.trade.UserTrades;
-import com.xeiam.xchange.exceptions.NotYetImplementedForExchangeException;
+import com.xeiam.xchange.exceptions.NotAvailableFromExchangeException;
 import com.xeiam.xchange.itbit.v1.ItBitAdapters;
 import com.xeiam.xchange.itbit.v1.dto.trade.ItBitOrder;
 import com.xeiam.xchange.service.polling.trade.PollingTradeService;
@@ -45,7 +45,7 @@ public class ItBitTradeService extends ItBitTradeServiceRaw implements PollingTr
   @Override
   public String placeMarketOrder(MarketOrder marketOrder) throws IOException {
 
-    throw new NotYetImplementedForExchangeException();
+    throw new NotAvailableFromExchangeException();
   }
 
   @Override
@@ -59,20 +59,6 @@ public class ItBitTradeService extends ItBitTradeServiceRaw implements PollingTr
 
     cancelItBitOrder(orderId);
     return true;
-  }
-
-  @Override
-  public UserTrades getTradeHistory(Object... arguments) throws IOException {
-
-    String currency;
-    if (arguments.length == 1) {
-      CurrencyPair currencyPair = ((CurrencyPair) arguments[0]);
-      currency = currencyPair.baseSymbol + currencyPair.counterSymbol;
-    } else {
-      currency = "XBTUSD";
-    }
-
-    return ItBitAdapters.adaptTradeHistory(getItBitTradeHistory(currency, "1", "1000"));
   }
 
   /**
@@ -89,7 +75,7 @@ public class ItBitTradeService extends ItBitTradeServiceRaw implements PollingTr
     ++pageNumber;
 
     CurrencyPair pair = ((TradeHistoryParamCurrencyPair) params).getCurrencyPair();
-    String currency = pair.baseSymbol + pair.counterSymbol;
+    String currency = pair.base.getCurrencyCode() + pair.counter.getCurrencyCode();
 
     return ItBitAdapters.adaptTradeHistory(getItBitTradeHistory(currency, toString(pageNumber), toString(pageLength)));
   }

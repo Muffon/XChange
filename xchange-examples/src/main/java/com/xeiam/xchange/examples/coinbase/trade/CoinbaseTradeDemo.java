@@ -8,6 +8,7 @@ import com.xeiam.xchange.coinbase.service.polling.CoinbaseTradeService;
 import com.xeiam.xchange.dto.marketdata.Trades;
 import com.xeiam.xchange.examples.coinbase.CoinbaseDemoUtils;
 import com.xeiam.xchange.service.polling.trade.PollingTradeService;
+import com.xeiam.xchange.service.polling.trade.params.DefaultTradeHistoryParamPaging;
 
 /**
  * @author jamespedwards42
@@ -25,13 +26,13 @@ public class CoinbaseTradeDemo {
 
   public static void generic(PollingTradeService tradeService) throws IOException {
 
-    // MarketOrder marketOrder = new MarketOrder(OrderType.BID, new BigDecimal(".01"), Currencies.BTC, Currencies.USD);
+    // MarketOrder marketOrder = new MarketOrder(OrderType.BID, new BigDecimal(".01"), Currency.BTC, Currency.USD);
     // String orderId = tradeService.placeMarketOrder(marketOrder);
     // System.out.println("Order Id: " + orderId);
 
     int page = 1; // optional
     int limit = 3; // optional
-    Trades trades = tradeService.getTradeHistory(page, limit);
+    Trades trades = tradeService.getTradeHistory(new DefaultTradeHistoryParamPaging(page, limit));
     System.out.println(trades);
   }
 
