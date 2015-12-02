@@ -2,6 +2,7 @@ package com.xeiam.xchange.bitfinex.v1.dto.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
+import java.math.BigDecimal;
 
 public class BitfinexWithdrawalRequest {
 
@@ -14,17 +15,36 @@ public class BitfinexWithdrawalRequest {
   @JsonProperty("options")
   @JsonRawValue
   protected String options;
+  
+  @JsonProperty("withdraw_type")
+  private final String withdrawType;
+
+  @JsonProperty("walletselected")  
+  private final String walletSelected;
+  @JsonProperty("amount")  
+  private final String amount;
+  @JsonProperty("address")  
+  private final String address;
 
   /**
    * Constructor
    * 
    * @param nonce
+     * @param withdrawType
+     * @param walletSelected     
+     * @param amount
+     * @param address
    */
-  public BitfinexWithdrawalRequest(String nonce) {
+  public BitfinexWithdrawalRequest(String nonce, String withdrawType, String walletSelected,
+          BigDecimal amount, String address) {
 
-    this.request = "/v1/balances";
+    this.request = "/v1/withdraw";
     this.nonce = String.valueOf(nonce);
     this.options = "[]";
+    this.withdrawType = withdrawType;
+    this.walletSelected = walletSelected;    
+    this.amount = amount.toString();
+    this.address = address;
   }
 
   public String getRequest() {
@@ -57,4 +77,19 @@ public class BitfinexWithdrawalRequest {
     this.options = options;
   }
 
+    public String getWithdrawType() {
+        return withdrawType;
+    }
+
+    public String getWalletSelected() {
+        return walletSelected;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public String getAddress() {
+        return address;
+    }
 }
